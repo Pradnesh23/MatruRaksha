@@ -440,89 +440,54 @@ export default function RiskDashboard() {
   }
 
   return (
-    <div style={{ background: darkMode ? '#1a1a2e' : '#f0f4f8', minHeight: '100vh', padding: '20px', transition: 'background 0.3s' }}>
-      <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-        {/* Header with Dark Mode Toggle */}
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '24px' }}>
+    <div className={`${darkMode ? 'bg-[#1a1a2e]' : 'bg-[#f0f4f8]'} min-h-screen py-6 transition-colors`}>
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="flex items-center justify-between mb-6">
           <div>
-            <h1 style={{ color: darkMode ? '#fff' : '#1f2937', marginBottom: '8px' }}>🏥 MaatruRaksha AI</h1>
-            <p style={{ color: darkMode ? '#9ca3af' : '#6b7280', marginBottom: '0' }}>{t('maternal_system')}</p>
+            <h1 className={`text-2xl font-extrabold ${darkMode ? 'text-white' : 'text-gray-900'}`}>🏥 MaatruRaksha AI</h1>
+            <p className={`${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{t('maternal_system')}</p>
           </div>
           <button
             onClick={() => setDarkMode(!darkMode)}
-            style={{
-              padding: '10px 16px',
-              background: darkMode ? '#374151' : '#e5e7eb',
-              border: 'none',
-              borderRadius: '6px',
-              cursor: 'pointer',
-              fontWeight: '600',
-              fontSize: '18px',
-              transition: 'all 0.3s',
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-            }}
+            className={`px-4 py-2 rounded-lg font-semibold shadow-sm ${darkMode ? 'bg-gray-700 text-white hover:bg-gray-600' : 'bg-gray-200 text-gray-800 hover:bg-gray-300'}`}
             title={darkMode ? t('light_mode') : t('dark_mode')}
           >
             {darkMode ? `☀️ ${t('light')}` : `🌙 ${t('dark')}`}
           </button>
         </div>
 
-        {/* Notification */}
         {message && (
-          <div style={{
-            position: 'fixed',
-            top: '20px',
-            right: '20px',
-            background: message.type === 'success' ? '#dcfce7' : message.type === 'error' ? '#fee2e2' : '#dbeafe',
-            border: `2px solid ${message.type === 'success' ? '#86efac' : message.type === 'error' ? '#fecaca' : '#7dd3fc'}`,
-            color: message.type === 'success' ? '#166534' : message.type === 'error' ? '#991b1b' : '#0c4a6e',
-            padding: '16px 20px',
-            borderRadius: '8px',
-            boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
-            zIndex: 1000,
-            fontSize: '14px',
-            maxWidth: '400px'
-          }}>
+          <div className={`fixed top-5 right-5 rounded-lg shadow-lg text-sm max-w-sm px-5 py-4 animate-fade-in ${
+            message.type === 'success' ? 'bg-green-100 text-green-900 border border-green-200' :
+            message.type === 'error' ? 'bg-red-100 text-red-900 border border-red-200' : 'bg-blue-100 text-blue-900 border border-blue-200'
+          }`}>
             {message.text}
           </div>
         )}
 
-        {/* Tabs */}
-        <div style={{
-          display: 'flex',
-          gap: '12px',
-          marginBottom: '24px',
-          background: darkMode ? '#262641' : 'white',
-          padding: '8px',
-          borderRadius: '8px',
-          boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-          flexWrap: 'wrap',
-          transition: 'background 0.3s'
-        }}>
-          {[
-            { id: 'dashboard', label: `📊 ${t('dashboard')}` },
-            { id: 'register', label: `➕ ${t('register')}` },
-            { id: 'risk-assessment', label: `⚠️ ${t('risk_assessment')}` },
-            { id: 'all-mothers', label: `👥 ${t('all_mothers')}` }
-          ].map(tab => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              style={{
-                padding: '10px 20px',
-                border: 'none',
-                borderRadius: '6px',
-                cursor: 'pointer',
-                fontWeight: '600',
-                fontSize: '14px',
-                background: activeTab === tab.id ? '#667eea' : (darkMode ? '#374151' : '#f3f4f6'),
-                color: activeTab === tab.id ? 'white' : (darkMode ? '#e5e7eb' : '#374151'),
-                transition: 'all 0.3s'
-              }}
-            >
-              {tab.label}
-            </button>
-          ))}
+        <div className={`mb-6 p-2 rounded-xl shadow ${darkMode ? 'bg-[#262641]' : 'bg-white'}`}>
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: 'dashboard', label: `📊 ${t('dashboard')}` },
+              { id: 'register', label: `➕ ${t('register')}` },
+              { id: 'risk-assessment', label: `⚠️ ${t('risk_assessment')}` },
+              { id: 'all-mothers', label: `👥 ${t('all_mothers')}` }
+            ].map(tab => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-5 py-2 rounded-lg font-semibold text-sm transition-colors ${
+                  activeTab === tab.id
+                    ? 'bg-indigo-600 text-white'
+                    : darkMode
+                    ? 'bg-gray-700 text-gray-200 hover:bg-gray-600'
+                    : 'bg-gray-100 text-gray-800 hover:bg-gray-200'
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Dashboard Tab - With Analytics */}
@@ -530,24 +495,9 @@ export default function RiskDashboard() {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
             {/* Top KPI Cards */}
             <div>
-              <div style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                marginBottom: '20px',
-                padding: '16px 20px',
-                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                borderRadius: '8px',
-                color: 'white'
-              }}>
-                <h2 style={{ margin: 0, fontSize: '20px' }}>📈 {t('health_analytics')}</h2>
-                <div style={{
-                  background: 'rgba(255,255,255,0.2)',
-                  padding: '10px 16px',
-                  borderRadius: '6px',
-                  fontSize: '16px',
-                  fontWeight: '600'
-                }}>
+              <div className="flex items-center justify-between mb-5 px-5 py-4 rounded-xl text-white" style={{background:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+                <h2 className="m-0 text-lg font-bold">📈 {t('health_analytics')}</h2>
+                <div className="bg-white/20 px-4 py-2 rounded-lg text-base font-semibold">
                   {t('total_mothers')}: <strong>{analytics.totalMothers}</strong>
                 </div>
               </div>

@@ -180,3 +180,132 @@ alter publication supabase_realtime add table public.appointments;
 alter table public.case_discussions
   add constraint if not exists chk_case_discussions_sender_role
   check (sender_role in ('MOTHER','ASHA','DOCTOR','SYSTEM'));
+
+-- ===== Authentication & Authorization System =====
+
+-- Create user roles enum
+create type user_role as enum ('ADMIN', 'DOCTOR', 'ASHA_WORKER');
+
+-- Create user profiles table linked to Supabase auth.users
+create table if not exists public.user_profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  email text unique not null,
+  full_name text not null,
+  phone text,
+  role user_role not null,
+  is_active boolean default true,
+  assigned_area text,
+  avatar_url text,
+  metadata jsonb default '{}'::jsonb,
+  created_at timestamptz default now(),
+  updated_at timestamptz default now()
+);
+
+-- Add user_profile_id to doctors table (link to auth user)
+alter table public.doctors
+  add column if not exists user_profile_id uuid references public.user_profiles(id),
+  add column if not exists email text;
+
+-- Add user_profile_id to asha_workers table (link to auth user)
+alter table public.asha_workers
+  add column if not exists user_profile_id uuid references public.user_profiles(id),
+  add column if not exists email text;
+
+-- Create indexes for performance
+create index if not exists idx_user_profiles_email on public.user_profiles(email);
+create index if not exists idx_user_profiles_role on public.user_profiles(role);
+create index if not exists idx_doctors_user_profile_id on public.doctors(user_profile_id);
+create index if not exists idx_asha_workers_user_profile_id on public.asha_workers(user_profile_id);
+
+-- Create function to handle new user creation
+create or replace function public.handle_new_user()
+returns trigger as $$
+begin
+  insert into public.user_profiles (id, email, full_name, role)
+  values (
+    new.id,
+    new.email,
+    coalesce(new.raw_user_meta_data->>'full_name', split_part(new.email, '@', 1)),
+    coalesce((new.raw_user_meta_data->>'role')::user_role, 'ASHA_WORKER'::user_role)
+  );
+  return new;
+end;
+$$ language plpgsql security definer;
+
+-- Create trigger for new user sign ups
+drop trigger if exists on_auth_user_created on auth.users;
+create trigger on_auth_user_created
+  after insert on auth.users
+  for each row execute function public.handle_new_user();
+
+-- Function to update updated_at timestamp
+create or replace function public.update_updated_at_column()
+returns trigger as $$
+begin
+  new.updated_at = now();
+  return new;
+end;
+$$ language plpgsql;
+
+-- Add trigger to update_updated_at for user_profiles
+drop trigger if exists update_user_profiles_updated_at on public.user_profiles;
+create trigger update_user_profiles_updated_at
+  before update on public.user_profiles
+  for each row execute function public.update_updated_at_column();
+
+-- Row Level Security (RLS) Policies
+alter table public.user_profiles enable row level security;
+
+-- Allow users to read their own profile
+create policy "Users can view own profile"
+  on public.user_profiles for select
+  using (auth.uid() = id);
+
+-- Allow users to update their own profile
+create policy "Users can update own profile"
+  on public.user_profiles for update
+  using (auth.uid() = id);
+
+-- Admin can view all profiles
+create policy "Admins can view all profiles"
+  on public.user_profiles for select
+  using (
+    exists (
+      select 1 from public.user_profiles
+      where id = auth.uid() and role = 'ADMIN'
+    )
+  );
+
+-- Admin can update all profiles
+create policy "Admins can update all profiles"
+  on public.user_profiles for update
+  using (
+    exists (
+      select 1 from public.user_profiles
+      where id = auth.uid() and role = 'ADMIN'
+    )
+  );
+
+-- Doctors can view ASHA workers in their area
+create policy "Doctors can view ASHA workers"
+  on public.user_profiles for select
+  using (
+    role = 'ASHA_WORKER' and exists (
+      select 1 from public.user_profiles doctor
+      where doctor.id = auth.uid() 
+        and doctor.role = 'DOCTOR'
+        and doctor.assigned_area = public.user_profiles.assigned_area
+    )
+  );
+
+-- Insert default admin user (update email as needed)
+insert into public.user_profiles (id, email, full_name, role, is_active)
+select 
+  gen_random_uuid(),
+  'admin@matruraksha.ai',
+  'System Admin',
+  'ADMIN'::user_role,
+  true
+where not exists (
+  select 1 from public.user_profiles where role = 'ADMIN'
+);

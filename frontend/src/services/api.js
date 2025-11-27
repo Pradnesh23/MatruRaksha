@@ -70,6 +70,32 @@ export const motherAPI = {
   }
 }
 
+export const authAPI = {
+  createRegisterRequest: async (payload) => {
+    const res = await api.post('/auth/register-request', payload)
+    return res
+  },
+  uploadCertification: async (email, file) => {
+    const form = new FormData()
+    form.append('email', email)
+    form.append('file', file)
+    const res = await api.post('/auth/upload-cert', form, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    return res
+  },
+  listRegisterRequests: async () => {
+    const res = await api.get('/auth/register-requests')
+    return res
+  },
+  decideRegisterRequest: async (id, approved, note) => {
+    const res = await api.post(`/auth/register-requests/${id}/decision`, { approved, note })
+    return res
+  }
+}
+
+export { api }
+
 // ==================== RISK ASSESSMENT API ====================
 export const riskAPI = {
   // Assess risk for a mother

@@ -1,4 +1,5 @@
 import os
+import importlib.util
 import logging
 import requests
 import threading
@@ -16,7 +17,8 @@ from fastapi import APIRouter, HTTPException, UploadFile, File, Form
 from contextlib import asynccontextmanager
 
 # Load environment variables
-load_dotenv()
+BASE_DIR = os.path.dirname(__file__)
+load_dotenv(os.path.join(BASE_DIR, ".env"))
 
 # Configure logging
 logging.basicConfig(
@@ -357,6 +359,33 @@ try:
 except ImportError:
     logger.warning("⚠️  Enhanced API router not available")
     app = FastAPI(title="MatruRaksha AI Backend", lifespan=lifespan)
+
+# Mount authentication router
+auth_router = None
+try:
+    from backend.routes.auth_routes import router as auth_router
+except Exception as e1:
+    try:
+        from routes.auth_routes import router as auth_router
+    except Exception as e2:
+        try:
+            module_path = os.path.join(os.path.dirname(__file__), 'routes', 'auth_routes.py')
+            spec = importlib.util.spec_from_file_location('auth_routes', module_path)
+            mod = importlib.util.module_from_spec(spec)
+            spec.loader.exec_module(mod)
+            auth_router = getattr(mod, 'router', None)
+        except Exception as e3:
+            logger.warning(f"⚠️  Authentication routes not available: {e1} | {e2} | {e3}")
+
+if auth_router:
+    app.include_router(auth_router)
+    logger.info("✅ Authentication routes loaded")
+    try:
+        for r in app.router.routes:
+            logger.info(f"🔗 {','.join(r.methods)} {getattr(r, 'path', '')}")
+    except Exception:
+        pass
+
 # ==================== CORS SETUP ====================
 app.add_middleware(
     CORSMiddleware,

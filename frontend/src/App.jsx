@@ -2,9 +2,17 @@
 import React, { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { BrowserRouter, Routes, Route, Link } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
+import Navbar from './components/Navbar'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import AuthCallback from './pages/AuthCallback'
 import RiskDashboard from './pages/RiskDashboard'
 import DoctorDashboard from './pages/DoctorDashboard.jsx'
 import ASHAInterface from './pages/ASHAInterface.jsx'
+import AdminDashboard from './pages/AdminDashboard'
+import AdminApprovals from './pages/AdminApprovals'
 
 export default function App() {
   const [isReady, setIsReady] = useState(false)
@@ -34,24 +42,74 @@ export default function App() {
   }
 
   return (
-    <BrowserRouter>
-      <div style={{ padding: 12, borderBottom: '1px solid #e5e7eb', display: 'flex', gap: 12, alignItems: 'center' }}>
-        <Link to="/" style={{ textDecoration: 'none' }}>{t('risk_dashboard')}</Link>
-        <Link to="/doctor" style={{ textDecoration: 'none' }}>{t('doctor_dashboard')}</Link>
-        <Link to="/asha" style={{ textDecoration: 'none' }}>{t('asha_interface')}</Link>
-        <div style={{ marginLeft: 'auto' }}>
-          <select aria-label="Language" value={i18n.language} onChange={(e) => i18n.changeLanguage(e.target.value)} style={{ padding: 6 }}>
-            <option value="en">English</option>
-            <option value="hi">हिंदी</option>
-            <option value="mr">मराठी</option>
-          </select>
-        </div>
-      </div>
-      <Routes>
-        <Route path="/" element={<RiskDashboard />} />
-        <Route path="/doctor" element={<DoctorDashboard />} />
-        <Route path="/asha" element={<ASHAInterface />} />
-      </Routes>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          {/* Public Routes */}
+          <Route path="/auth/login" element={<Login />} />
+          <Route path="/auth/signup" element={<Signup />} />
+          <Route path="/auth/callback" element={<AuthCallback />} />
+          
+          {/* Protected Routes */}
+          <Route 
+            path="/" 
+            element={
+              <ProtectedRoute>
+                <RiskDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/doctor" 
+            element={
+              <ProtectedRoute allowedRoles={['DOCTOR', 'ADMIN']}>
+                <DoctorDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/asha" 
+            element={
+              <ProtectedRoute allowedRoles={['ASHA_WORKER', 'DOCTOR', 'ADMIN']}>
+                <ASHAInterface />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/dashboard" 
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN']}>
+                <RiskDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/admin/approvals" 
+            element={
+              <ProtectedRoute allowedRoles={['ADMIN']}>
+                <AdminApprovals />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/doctor/dashboard" 
+            element={
+              <ProtectedRoute allowedRoles={['DOCTOR', 'ADMIN']}>
+                <DoctorDashboard />
+              </ProtectedRoute>
+            } 
+          />
+          <Route 
+            path="/asha/dashboard" 
+            element={
+              <ProtectedRoute allowedRoles={['ASHA_WORKER', 'DOCTOR', 'ADMIN']}>
+                <ASHAInterface />
+              </ProtectedRoute>
+            } 
+          />
+        </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
