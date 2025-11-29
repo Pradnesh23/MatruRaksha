@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { supabase } from '../lib/supabase.js'
+import { supabase } from '../services/auth.js'
 import { Send, MessageCircle, AlertCircle, Loader } from 'lucide-react'
 
 export default function CaseChat({ motherId, userRole = 'DOCTOR', userName = 'Doctor' }) {
@@ -137,7 +137,7 @@ export default function CaseChat({ motherId, userRole = 'DOCTOR', userName = 'Do
           </div>
         ) : (
           messages.map(m => (
-            <div key={m.id} className="animate-fadeIn">
+          <div key={m.id} className="animate-fade-in">
               <div className={`rounded-lg border ${getRoleColor(m.sender_role)} p-3`}>
                 <div className="flex items-center justify-between mb-2">
                   <span className={`text-xs font-semibold uppercase tracking-wide ${getRoleTextColor(m.sender_role)}`}>

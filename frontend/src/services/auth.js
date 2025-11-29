@@ -6,18 +6,41 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
+let supabase
+if (supabaseUrl && supabaseAnonKey) {
+  supabase = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    }
+  })
+} else {
   console.error('Missing Supabase credentials in environment variables')
+  const notConfigured = async () => { throw new Error('Supabase not configured') }
+  const chain = {
+    select: notConfigured,
+    insert: notConfigured,
+    update: notConfigured,
+    eq: () => chain,
+    order: () => chain,
+    limit: () => chain
+  }
+  supabase = {
+    from: () => chain,
+    auth: {
+      signUp: notConfigured,
+      signInWithPassword: notConfigured,
+      signInWithOAuth: notConfigured,
+      signOut: notConfigured,
+      getUser: async () => ({ data: { user: null } })
+    },
+    channel: () => ({ on: () => ({ subscribe: () => ({}) }) }),
+    removeChannel: () => {}
+  }
 }
 
-// Initialize Supabase client
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
-  }
-})
+export { supabase }
 
 /**
  * Authentication Service

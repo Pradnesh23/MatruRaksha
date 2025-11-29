@@ -13,6 +13,7 @@ import DoctorDashboard from './pages/DoctorDashboard.jsx'
 import ASHAInterface from './pages/ASHAInterface.jsx'
 import AdminDashboard from './pages/AdminDashboard'
 import AdminApprovals from './pages/AdminApprovals'
+import Home from './pages/Home.jsx'
 
 export default function App() {
   const [isReady, setIsReady] = useState(false)
@@ -27,15 +28,7 @@ export default function App() {
 
   if (!isReady) {
     return (
-      <div style={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-        color: 'white',
-        fontSize: '18px'
-      }}>
+      <div className="flex justify-center items-center min-h-screen bg-gradient-to-br from-indigo-600 to-purple-700 text-white text-lg">
         {t('loading')}
       </div>
     )
@@ -51,9 +44,11 @@ export default function App() {
           <Route path="/auth/signup" element={<Signup />} />
           <Route path="/auth/callback" element={<AuthCallback />} />
           
+          {/* Public Homepage */}
+          <Route path="/" element={<Home />} />
           {/* Protected Routes */}
           <Route 
-            path="/" 
+            path="/dashboard" 
             element={
               <ProtectedRoute>
                 <RiskDashboard />
