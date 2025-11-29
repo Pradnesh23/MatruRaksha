@@ -492,78 +492,44 @@ export default function RiskDashboard() {
 
         {/* Dashboard Tab - With Analytics */}
         {activeTab === 'dashboard' && (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+          <div className="flex flex-col gap-6">
             {/* Top KPI Cards */}
             <div>
-              <div className="flex items-center justify-between mb-5 px-5 py-4 rounded-xl text-white" style={{background:'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'}}>
+              <div className="flex items-center justify-between mb-5 px-5 py-4 rounded-xl text-white bg-gradient-to-r from-indigo-600 to-purple-700">
                 <h2 className="m-0 text-lg font-bold">📈 {t('health_analytics')}</h2>
                 <div className="bg-white/20 px-4 py-2 rounded-lg text-base font-semibold">
                   {t('total_mothers')}: <strong>{analytics.totalMothers}</strong>
                 </div>
               </div>
 
-              <div style={{
-                display: 'grid',
-                gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-                gap: '16px'
-              }}>
-                <div style={{
-                  background: 'white',
-                  padding: '20px',
-                  borderRadius: '8px',
-                  borderLeft: '4px solid #ef4444',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                }}>
-                  <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '600', marginBottom: '12px' }}>🔴 {t('high_risk')}</div>
-                  <div style={{ fontSize: '40px', fontWeight: '700', color: '#ef4444' }}>{analytics.highRiskCount}</div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="bg-white p-5 rounded-lg border-l-4 border-red-500 shadow">
+                  <div className="text-xs text-gray-600 font-semibold mb-3">🔴 {t('high_risk')}</div>
+                  <div className="text-4xl font-bold text-red-600">{analytics.highRiskCount}</div>
                 </div>
 
-                <div style={{
-                  background: 'white',
-                  padding: '20px',
-                  borderRadius: '8px',
-                  borderLeft: '4px solid #f59e0b',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                }}>
-                  <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '600', marginBottom: '12px' }}>🟡 {t('moderate_risk')}</div>
-                  <div style={{ fontSize: '40px', fontWeight: '700', color: '#f59e0b' }}>{analytics.moderateRiskCount}</div>
+                <div className="bg-white p-5 rounded-lg border-l-4 border-yellow-500 shadow">
+                  <div className="text-xs text-gray-600 font-semibold mb-3">🟡 {t('moderate_risk')}</div>
+                  <div className="text-4xl font-bold text-yellow-600">{analytics.moderateRiskCount}</div>
                 </div>
 
-                <div style={{
-                  background: 'white',
-                  padding: '20px',
-                  borderRadius: '8px',
-                  borderLeft: '4px solid #10b981',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                }}>
-                  <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '600', marginBottom: '12px' }}>🟢 {t('low_risk')}</div>
-                  <div style={{ fontSize: '40px', fontWeight: '700', color: '#10b981' }}>{analytics.lowRiskCount}</div>
+                <div className="bg-white p-5 rounded-lg border-l-4 border-green-500 shadow">
+                  <div className="text-xs text-gray-600 font-semibold mb-3">🟢 {t('low_risk')}</div>
+                  <div className="text-4xl font-bold text-green-600">{analytics.lowRiskCount}</div>
                 </div>
 
-                <div style={{
-                  background: 'white',
-                  padding: '20px',
-                  borderRadius: '8px',
-                  borderLeft: '4px solid #3b82f6',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-                }}>
-                  <div style={{ fontSize: '12px', color: '#6b7280', fontWeight: '600', marginBottom: '12px' }}>📋 {t('total_assessments')}</div>
-                  <div style={{ fontSize: '40px', fontWeight: '700', color: '#3b82f6' }}>{analytics.totalAssessments}</div>
+                <div className="bg-white p-5 rounded-lg border-l-4 border-blue-500 shadow">
+                  <div className="text-xs text-gray-600 font-semibold mb-3">📋 {t('total_assessments')}</div>
+                  <div className="text-4xl font-bold text-blue-600">{analytics.totalAssessments}</div>
                 </div>
               </div>
             </div>
 
             {/* Charts Section */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div className="flex flex-col gap-6">
               {/* Risk Trend Chart */}
-              <div style={{
-                background: darkMode ? '#262641' : 'white',
-                padding: '20px',
-                borderRadius: '8px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                transition: 'background 0.3s'
-              }}>
-                <h3 style={{ color: darkMode ? '#fff' : '#1f2937', marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>📊 {t('risk_trend')}</h3>
+              <div className={`${darkMode ? 'bg-[#262641]' : 'bg-white'} p-5 rounded-lg shadow transition-colors`}>
+                <h3 className={`${darkMode ? 'text-white' : 'text-gray-900'} mb-4 text-base font-semibold`}>📊 {t('risk_trend')}</h3>
                 {riskTrend.length > 0 ? (
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={riskTrend} margin={{ top: 20, right: 30, left: 0, bottom: 60 }}>
@@ -578,20 +544,14 @@ export default function RiskDashboard() {
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
-                  <p style={{ color: '#6b7280', textAlign: 'center', padding: '40px 0' }}>{t('no_assessment_data')}</p>
+                  <p className="text-gray-600 text-center py-10">{t('no_assessment_data')}</p>
                 )}
               </div>
 
               {/* Age Distribution & Risk Distribution */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))', gap: '20px' }}>
-                <div style={{
-                  background: darkMode ? '#262641' : 'white',
-                  padding: '20px',
-                  borderRadius: '8px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                  transition: 'background 0.3s'
-                }}>
-                  <h3 style={{ color: darkMode ? '#fff' : '#1f2937', marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>👶 {t('age_distribution')}</h3>
+              <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+                <div className={`${darkMode ? 'bg-[#262641]' : 'bg-white'} p-5 rounded-lg shadow transition-colors`}>
+                  <h3 className={`${darkMode ? 'text-white' : 'text-gray-900'} mb-4 text-base font-semibold`}>👶 {t('age_distribution')}</h3>
                   {ageDistribution.some(d => d.value > 0) ? (
                     <ResponsiveContainer width="100%" height={300}>
                       <PieChart>
@@ -604,18 +564,12 @@ export default function RiskDashboard() {
                       </PieChart>
                     </ResponsiveContainer>
                   ) : (
-                    <p style={{ color: '#6b7280', textAlign: 'center', padding: '40px 0' }}>{t('no_data')}</p>
+                    <p className="text-gray-600 text-center py-10">{t('no_data')}</p>
                   )}
                 </div>
 
-                <div style={{
-                  background: darkMode ? '#262641' : 'white',
-                  padding: '20px',
-                  borderRadius: '8px',
-                  boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                  transition: 'background 0.3s'
-                }}>
-                  <h3 style={{ color: darkMode ? '#fff' : '#1f2937', marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>⚠️ {t('overall_risk_distribution')}</h3>
+                <div className={`${darkMode ? 'bg-[#262641]' : 'bg-white'} p-5 rounded-lg shadow transition-colors`}>
+                  <h3 className={`${darkMode ? 'text-white' : 'text-gray-900'} mb-4 text-base font-semibold`}>⚠️ {t('overall_risk_distribution')}</h3>
                   {analytics && (analytics.highRiskCount + analytics.moderateRiskCount + analytics.lowRiskCount) > 0 ? (
                     <ResponsiveContainer width="100%" height={300}>
                       <PieChart>
@@ -639,20 +593,14 @@ export default function RiskDashboard() {
                       </PieChart>
                     </ResponsiveContainer>
                   ) : (
-                    <p style={{ color: '#6b7280', textAlign: 'center', padding: '40px 0' }}>{t('no_data')}</p>
+                    <p className="text-gray-600 text-center py-10">{t('no_data')}</p>
                   )}
                 </div>
               </div>
 
               {/* Vital Signs Chart */}
-              <div style={{
-                background: darkMode ? '#262641' : 'white',
-                padding: '20px',
-                borderRadius: '8px',
-                boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-                transition: 'background 0.3s'
-              }}>
-                <h3 style={{ color: darkMode ? '#fff' : '#1f2937', marginBottom: '16px', fontSize: '16px', fontWeight: '600' }}>💓 {t('avg_vitals_vs_normal')}</h3>
+              <div className={`${darkMode ? 'bg-[#262641]' : 'bg-white'} p-5 rounded-lg shadow transition-colors`}>
+                <h3 className={`${darkMode ? 'text-white' : 'text-gray-900'} mb-4 text-base font-semibold`}>💓 {t('avg_vitals_vs_normal')}</h3>
                 {vitalStats.some(v => v.value > 0) ? (
                   <ResponsiveContainer width="100%" height={300}>
                     <BarChart data={vitalStats} margin={{ top: 20, right: 30, left: 0, bottom: 100 }}>
@@ -666,27 +614,16 @@ export default function RiskDashboard() {
                     </BarChart>
                   </ResponsiveContainer>
                 ) : (
-                  <p style={{ color: '#6b7280', textAlign: 'center', padding: '40px 0' }}>{t('no_vitals')}</p>
+                  <p className="text-gray-600 text-center py-10">{t('no_vitals')}</p>
                 )}
               </div>
 
               {/* Refresh Button */}
-              <div style={{ display: 'flex', justifyContent: 'center', gap: '12px' }}>
+              <div className="flex justify-center gap-3">
                 <button
                   onClick={fetchAnalyticsData}
                   disabled={chartsLoading}
-                  style={{
-                    padding: '12px 24px',
-                    background: '#667eea',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    fontWeight: '600',
-                    fontSize: '14px',
-                    cursor: chartsLoading ? 'not-allowed' : 'pointer',
-                    opacity: chartsLoading ? 0.6 : 1,
-                    transition: 'all 0.3s'
-                  }}
+                  className="px-6 py-3 bg-indigo-600 text-white rounded-lg font-semibold text-sm disabled:opacity-60 disabled:cursor-not-allowed hover:bg-indigo-700 transition"
                 >
                   {chartsLoading ? `⏳ ${t('refreshing')}` : `🔄 ${t('refresh_analytics')}`}
                 </button>
@@ -697,52 +634,45 @@ export default function RiskDashboard() {
 
         {/* Register Tab */}
         {activeTab === 'register' && (
-          <div style={{
-            background: darkMode ? '#262641' : 'white',
-            padding: '24px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            maxWidth: '600px',
-            transition: 'background 0.3s'
-          }}>
-            <h2 style={{ marginBottom: '8px', color: darkMode ? '#fff' : '#1f2937' }}>📝 {t('register_pregnant_mother')}</h2>
-            <p style={{ color: darkMode ? '#9ca3af' : '#6b7280', marginBottom: '20px', fontSize: '14px' }}>{t('register_helptext')}</p>
+          <div className={`${darkMode ? 'bg-[#262641]' : 'bg-white'} p-6 rounded-lg shadow max-w-[600px] transition-colors`}>
+            <h2 className={`${darkMode ? 'text-white' : 'text-gray-900'} mb-2`}>📝 {t('register_pregnant_mother')}</h2>
+            <p className={`${darkMode ? 'text-gray-400' : 'text-gray-600'} mb-5 text-sm`}>{t('register_helptext')}</p>
 
             <form onSubmit={handleRegisterSubmit}>
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: darkMode ? '#e5e7eb' : '#374151' }}>{t('full_name')} *</label>
-                  <input type="text" name="name" placeholder={t('full_name_placeholder')} value={registerForm.name} onChange={handleRegisterChange} required style={{ width: '100%', padding: '10px 12px', border: `1px solid ${darkMode ? '#404854' : '#d1d5db'}`, borderRadius: '6px', fontSize: '14px', background: darkMode ? '#1a1a2e' : '#fff', color: darkMode ? '#fff' : '#000' }} />
+                  <label className={`${darkMode ? 'text-gray-200' : 'text-gray-700'} block text-sm font-semibold mb-1`}>{t('full_name')} *</label>
+                  <input type="text" name="name" placeholder={t('full_name_placeholder')} value={registerForm.name} onChange={handleRegisterChange} required className={`w-full px-3 py-2 border rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent ${darkMode ? 'bg-[#1a1a2e] text-white border-gray-700' : 'bg-white text-black border-gray-300'}`} />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>📱 {t('phone_number')} *</label>
-                  <input type="tel" name="phone" placeholder="9876543210" value={registerForm.phone} onChange={handleRegisterChange} required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>👤 {t('age_years')} *</label>
-                  <input type="number" name="age" placeholder="28" value={registerForm.age} onChange={handleRegisterChange} required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>⚖️ {t('bmi')} *</label>
-                  <input type="number" name="bmi" placeholder="22.5" step="0.1" value={registerForm.bmi} onChange={handleRegisterChange} required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} />
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">📱 {t('phone_number')} *</label>
+                  <input type="tel" name="phone" placeholder="9876543210" value={registerForm.phone} onChange={handleRegisterChange} required className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>{t('gravida')}</label>
-                  <select name="gravida" value={registerForm.gravida} onChange={handleRegisterChange} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}>
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">👤 {t('age_years')} *</label>
+                  <input type="number" name="age" placeholder="28" value={registerForm.age} onChange={handleRegisterChange} required className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">⚖️ {t('bmi')} *</label>
+                  <input type="number" name="bmi" placeholder="22.5" step="0.1" value={registerForm.bmi} onChange={handleRegisterChange} required className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">{t('gravida')}</label>
+                  <select name="gravida" value={registerForm.gravida} onChange={handleRegisterChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                     <option>Gravida 1</option>
                     <option>Gravida 2</option>
                     <option>Gravida 3</option>
                   </select>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>{t('parity')}</label>
-                  <select name="parity" value={registerForm.parity} onChange={handleRegisterChange} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}>
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">{t('parity')}</label>
+                  <select name="parity" value={registerForm.parity} onChange={handleRegisterChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                     <option>Parity 0</option>
                     <option>Parity 1</option>
                     <option>Parity 2</option>
@@ -750,27 +680,27 @@ export default function RiskDashboard() {
                 </div>
               </div>
 
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>📍 {t('location')} *</label>
-                <input type="text" name="location" placeholder="e.g., Dharavi, Mumbai" value={registerForm.location} onChange={handleRegisterChange} required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} />
+              <div className="mb-4">
+                <label className="text-gray-700 block text-sm font-semibold mb-1">📍 {t('location')} *</label>
+                <input type="text" name="location" placeholder="e.g., Dharavi, Mumbai" value={registerForm.location} onChange={handleRegisterChange} required className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>🌍 {t('preferred_language')}</label>
-                  <select name="preferred_language" value={registerForm.preferred_language} onChange={handleRegisterChange} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}>
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">🌍 {t('preferred_language')}</label>
+                  <select name="preferred_language" value={registerForm.preferred_language} onChange={handleRegisterChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                     <option value="en">English</option>
                     <option value="mr">Marathi</option>
                     <option value="hi">Hindi</option>
                   </select>
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>💬 {t('telegram_chat_id')}</label>
-                  <input type="text" name="telegram_chat_id" placeholder="Optional: Chat ID" value={registerForm.telegram_chat_id} onChange={handleRegisterChange} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} />
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">💬 {t('telegram_chat_id')}</label>
+                  <input type="text" name="telegram_chat_id" placeholder="Optional: Chat ID" value={registerForm.telegram_chat_id} onChange={handleRegisterChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
               </div>
 
-              <button type="submit" disabled={loading} style={{ width: '100%', padding: '12px', background: '#667eea', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', fontSize: '14px', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1 }}>
+              <button type="submit" disabled={loading} className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg font-semibold text-sm disabled:opacity-60 disabled:cursor-not-allowed hover:bg-indigo-700 transition">
                 {loading ? t('registering') : t('register_mother')}
               </button>
             </form>
@@ -779,19 +709,13 @@ export default function RiskDashboard() {
 
         {/* Risk Assessment Tab */}
         {activeTab === 'risk-assessment' && (
-          <div style={{
-            background: 'white',
-            padding: '24px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-            maxWidth: '600px'
-          }}>
-            <h2 style={{ marginBottom: '16px', color: '#1f2937' }}>⚕️ {t('risk_assessment')}</h2>
+          <div className="bg-white p-6 rounded-lg shadow max-w-[600px]">
+            <h2 className="mb-4 text-gray-900">⚕️ {t('risk_assessment')}</h2>
 
             <form onSubmit={handleAssessRisk}>
-              <div style={{ marginBottom: '16px' }}>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>{t('select_mother')} *</label>
-                <select name="mother_id" value={assessmentForm.mother_id} onChange={handleAssessmentChange} required style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }}>
+              <div className="mb-4">
+                <label className="text-gray-700 block text-sm font-semibold mb-1">{t('select_mother')} *</label>
+                <select name="mother_id" value={assessmentForm.mother_id} onChange={handleAssessmentChange} required className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent">
                   <option value="">{t('choose_mother')}</option>
                   {mothers.map(mother => (
                     <option key={mother.id} value={mother.id}>{mother.name} ({mother.phone})</option>
@@ -799,38 +723,31 @@ export default function RiskDashboard() {
                 </select>
               </div>
 
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>{t('systolic_bp')}</label>
-                  <input type="number" name="systolic_bp" placeholder="120" value={assessmentForm.systolic_bp} onChange={handleAssessmentChange} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} />
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">{t('systolic_bp')}</label>
+                  <input type="number" name="systolic_bp" placeholder="120" value={assessmentForm.systolic_bp} onChange={handleAssessmentChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
                 <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>{t('diastolic_bp')}</label>
-                  <input type="number" name="diastolic_bp" placeholder="80" value={assessmentForm.diastolic_bp} onChange={handleAssessmentChange} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} />
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '16px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>{t('heart_rate')}</label>
-                  <input type="number" name="heart_rate" placeholder="80" value={assessmentForm.heart_rate} onChange={handleAssessmentChange} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '6px', color: '#374151' }}>{t('blood_glucose')}</label>
-                  <input type="number" name="blood_glucose" placeholder="100" value={assessmentForm.blood_glucose} onChange={handleAssessmentChange} style={{ width: '100%', padding: '10px 12px', border: '1px solid #d1d5db', borderRadius: '6px', fontSize: '14px' }} />
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">{t('diastolic_bp')}</label>
+                  <input type="number" name="diastolic_bp" placeholder="80" value={assessmentForm.diastolic_bp} onChange={handleAssessmentChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
                 </div>
               </div>
 
-              <div style={{ marginBottom: '16px' }}>
-                <h4 style={{ color: '#1f2937', marginBottom: '12px', fontWeight: '600' }}>{t('clinical_symptoms_optional')}</h4>
-                <div style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
-                  gap: '12px',
-                  background: '#f9fafb',
-                  padding: '12px',
-                  borderRadius: '6px'
-                }}>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">{t('heart_rate')}</label>
+                  <input type="number" name="heart_rate" placeholder="80" value={assessmentForm.heart_rate} onChange={handleAssessmentChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                </div>
+                <div>
+                  <label className="text-gray-700 block text-sm font-semibold mb-1">{t('blood_glucose')}</label>
+                  <input type="number" name="blood_glucose" placeholder="100" value={assessmentForm.blood_glucose} onChange={handleAssessmentChange} className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:border-transparent" />
+                </div>
+              </div>
+
+              <div className="mb-4">
+                <h4 className="text-gray-900 mb-3 font-semibold">{t('clinical_symptoms_optional')}</h4>
+                <div className="grid [grid-template-columns:repeat(auto-fit,minmax(200px,1fr))] gap-3 bg-gray-50 p-3 rounded-lg">
                   {[
                     { key: 'proteinuria', label: t('proteinuria') },
                     { key: 'edema', label: t('edema') },
@@ -839,7 +756,7 @@ export default function RiskDashboard() {
                     { key: 'epigastric_pain', label: t('epigastric_pain') },
                     { key: 'vaginal_bleeding', label: t('vaginal_bleeding') }
                   ].map(symptom => (
-                    <label key={symptom.key} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', fontSize: '14px' }}>
+                    <label key={symptom.key} className="flex items-center gap-2 cursor-pointer text-sm">
                       <input
                         type="checkbox"
                         checked={assessmentForm[symptom.key] === 1}
@@ -849,7 +766,7 @@ export default function RiskDashboard() {
                             [symptom.key]: e.target.checked ? 1 : 0
                           }))
                         }}
-                        style={{ width: '18px', height: '18px', cursor: 'pointer' }}
+                        className="w-4 h-4 cursor-pointer"
                       />
                       <span>{symptom.label}</span>
                     </label>
@@ -857,21 +774,14 @@ export default function RiskDashboard() {
                 </div>
               </div>
 
-              <button type="submit" disabled={loading} style={{ width: '100%', padding: '12px', background: '#667eea', color: 'white', border: 'none', borderRadius: '6px', fontWeight: '600', fontSize: '14px', cursor: loading ? 'not-allowed' : 'pointer', opacity: loading ? 0.6 : 1 }}>
+              <button type="submit" disabled={loading} className="w-full px-4 py-3 bg-indigo-600 text-white rounded-lg font-semibold text-sm disabled:opacity-60 disabled:cursor-not-allowed hover:bg-indigo-700 transition">
                 {loading ? t('assessing') : t('assess_risk')}
               </button>
             </form>
 
             {riskResult && (
-              <div style={{
-                marginTop: '20px',
-                padding: '16px',
-                background: '#f0fdf4',
-                border: '1px solid #86efac',
-                borderRadius: '6px',
-                color: '#166534'
-              }}>
-                <h3 style={{ margin: '0 0 12px 0' }}>✅ {t('risk_assessment_result')}</h3>
+              <div className="mt-5 p-4 bg-green-50 border border-green-200 rounded-lg text-green-800">
+                <h3 className="mb-3">✅ {t('risk_assessment_result')}</h3>
                 <p><strong>{t('risk_score')}:</strong> {(riskResult.risk_score * 100).toFixed(1)}%</p>
                 <p><strong>{t('risk_level')}:</strong> {riskResult.risk_level}</p>
                 <p><strong>{t('risk_factors')}:</strong> {riskResult.risk_factors?.join(', ') || t('none')}</p>
@@ -882,13 +792,8 @@ export default function RiskDashboard() {
 
         {/* All Mothers Tab */}
         {activeTab === 'all-mothers' && (
-          <div style={{
-            background: 'white',
-            padding: '24px',
-            borderRadius: '8px',
-            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
-          }}>
-            <h2 style={{ marginBottom: '16px', color: '#1f2937' }}>👥 {t('all_registered_mothers')}</h2>
+          <div className="bg-white p-6 rounded-lg shadow">
+            <h2 className="mb-4 text-gray-900">👥 {t('all_registered_mothers')}</h2>
             {mothers.length === 0 ? (
               <p style={{ color: '#6b7280' }}>{t('no_mothers')}</p>
             ) : (

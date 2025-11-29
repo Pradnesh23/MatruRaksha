@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import CaseChat from '../components/CaseChat.jsx'
-import { supabase } from '../lib/supabase.js'
+import { supabase } from '../services/auth.js'
 import { Stethoscope, AlertTriangle, AlertCircle, CheckCircle, MapPin, Cake, Activity, Heart, TrendingUp, Search, RefreshCw } from 'lucide-react'
 
 export default function DoctorDashboard() {

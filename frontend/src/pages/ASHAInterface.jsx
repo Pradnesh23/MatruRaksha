@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { supabase } from '../lib/supabase.js'
+import { supabase } from '../services/auth.js'
 import CaseChat from '../components/CaseChat.jsx'
 import { Users, Search, Phone, MapPin, AlertCircle, Heart, TrendingUp, Loader, RefreshCw } from 'lucide-react'
 
